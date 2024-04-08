@@ -1,0 +1,8 @@
+---
+title: "Project Proposal"
+format: pdf
+editor: visual
+self-contained: true
+---
+
+## Quarto
