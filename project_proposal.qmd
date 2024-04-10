@@ -24,3 +24,55 @@ Where (collected): All across London (the jurisidiction of the LFB)
 Observational units: One animal incident/call
 
 What information/variables: There are 31 variables in this data set. 10 are numeric and 21 are categorical. These include information such as incident ID, location, date/time of day, incident attributes/description, cost, and type of animal involved. This does not include information on animals deaths or injury.
+
+## Research Questions
+
+1.  How have the frequency of animal rescues changed over time among different animals?
+
+    May include: `cal_year` (calendar year), `animal_group_parent` (type of animal)
+
+2.  How is the location of the incident associated with cost?
+
+    May include: `borough`, `hourly_notional_cost`, `incident_notional_cost`
+
+3.  How is the type of incident associated with the time of year?
+
+    May include: `date_time_of_call`, `special_service_type_category` (type of incident)
+
+## Group Contract
+
+-   How will you communicate? Email? Text? Discord? Meet in person or via Zoom?
+
+    Communicate via text, meet in person and on Zoom as needed.
+
+-   How often will you be expected to check for updates from your group members?
+
+    Once per week and prior to deadlines.
+
+-   Will there be a group leader, or will this task be rotated in some way? How will you ensure that all project deadlines are met?
+
+    We will share project leadership and keep each other accountable with deadlines.
+
+-   Discuss a timeline for completion. Each of you have busy lives, so discuss schedules in order to try and avoid overwhelming someone with work during a period of time, or to plan ahead if someone is going to be gone at some point.
+
+    We will aim to complete checkpoints two days prior to the deadlines, allowing room for flexibility. We aim to complete the entire project several days before the deadline. There are no scheduled absences within our group.
+
+-   How will all group members work collaboratively on this project through the course of the project? Will you share ideas using Google Docs? Will you create a GitHub repository? Some other way? Please explain.
+
+    We have established a GitHub repository and Quarto files for each checkpoint.
+
+-   Who will be assigned to submit the different components of the group project into Canvas?
+
+    Jett
+
+-   What will be your group’s policy, if any, on covering for one another if need be (for example, say someone is sick, or has a family emergency)?
+
+    Upon illness or emergency of a group member, the group has agreed to cover their work if they are unable to complete it asynchronously.
+
+-   What policy will you have in place to resolve any intragroup conflict that may arise (for example, if a group member neglects to carry out their delegated duties to post their results on time, or if a group member is not receiving or responding to group updates as often as expected in item 2 above)? Here are a few options for consideration: warning to the offender, reduction of points, zero credit for the repeat offender, etc. You may use the instructor as a higher court of appeals – but you will be first expected to document that you implemented your initial conflict resolution plans per your contract and to update the instructor on the outcomes of your own attempts to resolve the conflict.
+
+    -   The first “strike” will be a warning of sorts- someone will reach out to the person and remind them of their delegated duty.
+
+    -   The second “strike” will be a team meeting where the group can discuss assignment delegations and hopefully come to a new/better agreement that suits everyone.
+
+    -   The third “strike” will be approaching Dr. Robinson for assistance.
