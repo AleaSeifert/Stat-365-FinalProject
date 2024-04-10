@@ -3,11 +3,13 @@ title: "CP1: Data Proposal"
 format: pdf
 editor: visual
 self-contained: true
+authors: "Alea Seifert, Jett Palmer, Libby Brill, Sophia Freije"
 ---
 
 ## Data Set
 
 ```{r}
+#| message: false
 source("data_cleaning.R")
 ```
 
