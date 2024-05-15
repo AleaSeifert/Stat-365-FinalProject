@@ -1,0 +1,154 @@
+---
+title: "storyboarding"
+author: "Libby Brill, Sophia Freije, Jett Palmer, Alea Seifert"
+format:
+  html:
+    self-contained: true
+    code-tools: true
+editor: source
+code-fold: true
+---
+
+```{r}
+#| message: false
+
+library(tidyverse)
+library(here)
+library(ggrepel)
+library(ggtext)
+
+animals <- read_csv(here("animal_rescues.csv"))
+```
+
+```{r}
+#| echo: false
+#| eval: false
+
+# "The figure shows that from 2009 to 2021, the London Fire Brigade has responded to more than double the number of calls in the afternoon/evening compared to the morning. There have been roughly 2,400 animals rescued before noon and just over 5,000 rescued after."
+
+animals |>
+  mutate(date_time_of_call = dmy_hm(date_time_of_call),
+         am_pm = if_else(hour(date_time_of_call) < 12, "AM", "PM")) |>
+  group_by(am_pm) |>
+  count() |>
+  ggplot(aes(x = am_pm, y = n, fill = am_pm)) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  labs(title = "Time of Day of London Fire Brigade Animal Rescues (2009-2021)",
+       subtitle = "Number of Animal Rescues",
+       x = "Time of Day: AM (morning) vs. PM (afternoon/evening)",
+       y = "",
+       caption = "\nData Source: London Data Store"
+       ) +
+  scale_fill_manual(values = c("orange3", "steelblue")) +
+  theme_bw() +
+  theme(plot.caption = element_text(hjust = 0))
+
+#       color = "Time of Day\n(Afternoon/Evening vs. Morning)",
+#       linetype = "Time of Day\n(Afternoon/Evening vs. Morning)",
+#       shape = "Time of Day\n(Afternoon/Evening vs. Morning)"
+```
+
+
+
+
+```{r}
+#| fig-width: 8
+#| fig-height: 4
+#| fig-alt: "The figure represents the number of animal rescues by the London Fire Brigade from 2009 to 2020, with the data sourced from the London Data Store. Grouped by the time of day (morning vs. afternoon/evening), the plot reveals that afternoon/evening rescures have been far more common than morning rescues across all years."
+#| fig-cap: "The figure represents the number of animal rescues by the London Fire Brigade from 2009 to 2020. Grouped by the time of day, the plot reveals that afternoon/evening rescues have been far more common than morning rescues across all years."
+
+#animals_start <- animals |>
+#  filter(cal_year == 2009) |>
+#  mutate(date_time_of_call = dmy_hm(date_time_of_call),
+#         am_pm = if_else(hour(date_time_of_call) < 12, "AM", "PM")) |>
+#  group_by(cal_year, am_pm) |>
+#  count()
+
+animals |>
+  filter(cal_year < 2021) |>
+  mutate(date_time_of_call = dmy_hm(date_time_of_call),
+         day_time = if_else(hour(date_time_of_call) < 9 | hour(date_time_of_call) >= 21, "Night", "Day")) |>
+  filter(animal_group_parent %in% c("Cat", "Dog", "Bird")) |>
+  group_by(cal_year, day_time, animal_group_parent) |>
+  count() |>
+  ggplot(aes(x = cal_year, y = n, color = day_time)) +
+  geom_line(aes(linetype = day_time), show.legend = FALSE, linewidth = 0.75) +
+  geom_point(aes(shape = day_time), show.legend = FALSE, size = 2.5) +
+  labs(title = "London Fire Brigade Animal Rescues over Time:<br>Morning (<span style='color: orange3;'>AM</span>) vs. Afternoon/Evening (<span style='color: steelblue;'>PM</span>)",
+       x = "",
+       y = "",
+       caption = "Data Source: London Data Store",
+       ) +
+  scale_color_manual(values = c("orange3","steelblue")) +
+  scale_linetype_manual(values = c("solid", "dashed")) +
+  scale_shape_manual(values = c(17, 16)) +
+  scale_x_continuous(breaks = c(2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020)) +
+  scale_y_continuous(limits = c(0, 525), breaks = c(0, 100, 200, 300, 400, 500)) +
+  theme_bw() +
+  theme(plot.caption = element_text(hjust = 0),
+        plot.title = element_markdown()) +
+  facet_wrap(~animal_group_parent)
+```
+
+
+```{r}
+#| fig-width: 8
+#| fig-height: 4
+
+animals_new <- animals |>
+  filter(cal_year < 2021) |>
+  mutate(date_time_of_call = dmy_hm(date_time_of_call),
+         day_time = if_else(hour(date_time_of_call) < 6 | hour(date_time_of_call) >= 18, "Night", "Day")) |>
+  filter(animal_group_parent %in% c("Cat", "Dog", "Bird")) |>
+  group_by(cal_year, day_time, animal_group_parent) |>
+  count() |>
+  pivot_wider(names_from = c(animal_group_parent, day_time),
+              values_from = n) |>
+  mutate(Bird = Bird_Night / (Bird_Day + Bird_Night),
+         Cat = Cat_Night / (Cat_Day + Cat_Night),
+         Dog = Dog_Night / (Dog_Day + Dog_Night)) |>
+  select(cal_year, Bird, Cat, Dog) |>
+  pivot_longer(cols = Bird:Dog,
+               names_to = "Animal",
+               values_to = "Prop_Night")
+  
+animals_new |>
+  ggplot(aes(x = cal_year, y = Prop_Night)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Night Rescues by Animal, over Time",
+       subtitle = "Proportion of Night Rescues",
+       x = "Year",
+       y = "") +
+  scale_x_continuous(breaks = c(2010, 2015, 2020)) +
+  scale_y_continuous(limits = c(0, 1)) +
+  theme_bw() +
+  facet_wrap(~Animal)
+```
+
+```{r}
+animals |>
+  filter(cal_year < 2021) |>
+  mutate(date_time_of_call = dmy_hm(date_time_of_call),
+         day_time = if_else(hour(date_time_of_call) < 6 | hour(date_time_of_call) >= 18, "Night", "Day")) |>
+  filter(animal_group_parent %in% c("Cat", "Dog", "Bird")) |>
+  group_by(day_time, animal_group_parent) |>
+  count() |>
+  pivot_wider(id_cols = animal_group_parent, names_from = day_time, values_from = n) |>
+  mutate(Total = Day + Night,
+         Night_Prop = Night / Total) |>
+  select(animal_group_parent, Night_Prop) |>
+  rename(Animal = animal_group_parent)
+
+
+#  pivot_wider(names_from = c(animal_group_parent, day_time),
+#              values_from = n) |>
+#  mutate(Bird = Bird_Night / (Bird_Day + Bird_Night),
+#         Cat = Cat_Night / (Cat_Day + Cat_Night),
+#         Dog = Dog_Night / (Dog_Day + Dog_Night)) |>
+#  select(cal_year, Bird, Cat, Dog) |>
+#  pivot_longer(cols = Bird:Dog,
+#               names_to = "Animal",
+#               values_to = "Prop_Night")
+```
+
