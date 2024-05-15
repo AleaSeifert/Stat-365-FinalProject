@@ -99,31 +99,37 @@ animals_new <- animals |>
   filter(cal_year < 2021) |>
   mutate(date_time_of_call = dmy_hm(date_time_of_call),
          day_time = if_else(hour(date_time_of_call) < 6 | hour(date_time_of_call) >= 18, "Night", "Day")) |>
-  filter(animal_group_parent %in% c("Cat", "Dog", "Bird")) |>
-  group_by(cal_year, day_time, animal_group_parent) |>
+  filter(animal_group_parent %in% c("Cat", "Dog", "Rabbit", "Bird", "Fox", "Deer")) |>
+  mutate(animal_category = case_when(animal_group_parent == "Cat" ~ "Pet",
+                                     animal_group_parent == "Dog" ~ "Pet",
+                                     animal_group_parent == "Rabbit" ~ "Pet",
+                                     animal_group_parent == "Bird" ~ "Wild",
+                                     animal_group_parent == "Fox" ~ "Wild",
+                                     animal_group_parent == "Deer" ~ "Wild")) |>
+  group_by(cal_year, day_time, animal_category) |>
   count() |>
-  pivot_wider(names_from = c(animal_group_parent, day_time),
+  pivot_wider(names_from = c(animal_category, day_time),
               values_from = n) |>
-  mutate(Bird = Bird_Night / (Bird_Day + Bird_Night),
-         Cat = Cat_Night / (Cat_Day + Cat_Night),
-         Dog = Dog_Night / (Dog_Day + Dog_Night)) |>
-  select(cal_year, Bird, Cat, Dog) |>
-  pivot_longer(cols = Bird:Dog,
-               names_to = "Animal",
+  mutate(Pets = Pet_Night / (Pet_Day + Pet_Night),
+         `Wild Animals` = Wild_Night / (Wild_Day + Wild_Night)) |>
+  select(cal_year, Pets, `Wild Animals`) |>
+  pivot_longer(cols = Pets:`Wild Animals`,
+               names_to = "Animal_Category",
                values_to = "Prop_Night")
   
 animals_new |>
   ggplot(aes(x = cal_year, y = Prop_Night)) +
-  geom_line() +
-  geom_point() +
-  labs(title = "Night Rescues by Animal, over Time",
+  geom_area() +
+  #geom_line() +
+  #geom_point() +
+  labs(title = "Night Rescues by Type of Animal, over Time",
        subtitle = "Proportion of Night Rescues",
        x = "Year",
        y = "") +
   scale_x_continuous(breaks = c(2010, 2015, 2020)) +
   scale_y_continuous(limits = c(0, 1)) +
   theme_bw() +
-  facet_wrap(~Animal)
+  facet_wrap(~Animal_Category)
 ```
 
 ```{r}
@@ -131,14 +137,19 @@ animals |>
   filter(cal_year < 2021) |>
   mutate(date_time_of_call = dmy_hm(date_time_of_call),
          day_time = if_else(hour(date_time_of_call) < 6 | hour(date_time_of_call) >= 18, "Night", "Day")) |>
-  filter(animal_group_parent %in% c("Cat", "Dog", "Bird")) |>
-  group_by(day_time, animal_group_parent) |>
+  filter(animal_group_parent %in% c("Cat", "Dog", "Rabbit", "Bird", "Fox", "Deer")) |>
+  mutate(Animal_Category = case_when(animal_group_parent == "Cat" ~ "Pets",
+                                     animal_group_parent == "Dog" ~ "Pets",
+                                     animal_group_parent == "Rabbit" ~ "Pets",
+                                     animal_group_parent == "Bird" ~ "Wild Animals",
+                                     animal_group_parent == "Fox" ~ "Wild Animals",
+                                     animal_group_parent == "Deer" ~ "Wild Animals")) |>
+  group_by(day_time, Animal_Category) |>
   count() |>
-  pivot_wider(id_cols = animal_group_parent, names_from = day_time, values_from = n) |>
+  pivot_wider(id_cols = Animal_Category, names_from = day_time, values_from = n) |>
   mutate(Total = Day + Night,
          Night_Prop = Night / Total) |>
-  select(animal_group_parent, Night_Prop) |>
-  rename(Animal = animal_group_parent)
+  select(Animal_Category, Night_Prop)
 
 
 #  pivot_wider(names_from = c(animal_group_parent, day_time),
