@@ -164,6 +164,25 @@ animals |>
 ```
 
 ```{r}
+# Updated graph
+animals_new |>
+  ggplot(aes(x = cal_year, y = Prop_Night, fill = Animal_Category)) +
+  geom_area(position = "identity") +
+  #geom_line() +
+  #geom_point() +
+  labs(title = "Pets exceed Wildlife in Nighttime Rescues",
+       subtitle = "Proportion of Night Rescues",
+       y = "",
+       x = "",
+       fill = "Animal Type") +
+  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), minor_breaks = NULL) +
+  scale_y_continuous(limits = c(0, 1), minor_breaks = NULL) +
+  theme_bw() +
+  scale_fill_manual(values = c("orange3", "steelblue"))
+
+```
+
+```{r}
 # Conditions 
 animals_check <- animals |>
   filter(cal_year < 2021) |>
@@ -177,7 +196,7 @@ animals_check <- animals |>
                                      animal_group_parent == "Fox" ~ "Wild",
                                      animal_group_parent == "Deer" ~ "Wild")) |>
   select(animal_category, day_time) |>
-  count(animal_category, day_time)
+  count(animal_category, day_time) 
 
 
 ```
@@ -207,6 +226,7 @@ z <- (p1 - p2) / se
 
 # P-value
 p_value <- 2 * pnorm(-abs(z))
+prop.test(x = c(1636, 570), n= c(4668, 1898), alternative = "greater")
 
 # Check sample sizes
 p1
@@ -217,6 +237,26 @@ n_pet*p1
 n_pet*(1-p1)
 n_wild*p2
 n_wild*(1-p2)
+
+# Confidence Intervals
+result1 <- prop.test(pet, n_pet)
+result2 <- prop.test(wild, n_wild)
+cat("95% Confidence interval for proportion in Pets:", result1$conf.int, "\n95% Confidence interval for proportion in Wild Animals:", result2$conf.int, "\n")
+
+cl_animal <- data.frame(animal_type = c("Pets", "Wild Animals"),
+                        lower = c(0.3368063, 0.2798561),
+                        upper = c(0.3643841, 0.3215931),
+                        prop = c(p1, p2))
+
+ggplot(cl_animal, aes(x = animal_type)) +
+  geom_point(aes(y = prop), size = 4) +  # Specify y value here
+  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2) +
+  labs(title = "95% Confidence Intervals for Nighttime Rescues",
+       subtitle = "Confidence Interval",
+       x = "Animal Type",
+       y = "") +
+  theme_bw()
+  
 ```
 
 
