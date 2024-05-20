@@ -163,3 +163,60 @@ animals |>
 #               values_to = "Prop_Night")
 ```
 
+```{r}
+# Conditions 
+animals_check <- animals |>
+  filter(cal_year < 2021) |>
+  mutate(date_time_of_call = dmy_hm(date_time_of_call),
+         day_time = if_else(hour(date_time_of_call) < 6 | hour(date_time_of_call) >= 18, "Night", "Day")) |>
+  filter(animal_group_parent %in% c("Cat", "Dog", "Rabbit", "Bird", "Fox", "Deer")) |>
+  mutate(animal_category = case_when(animal_group_parent == "Cat" ~ "Pet",
+                                     animal_group_parent == "Dog" ~ "Pet",
+                                     animal_group_parent == "Rabbit" ~ "Pet",
+                                     animal_group_parent == "Bird" ~ "Wild",
+                                     animal_group_parent == "Fox" ~ "Wild",
+                                     animal_group_parent == "Deer" ~ "Wild")) |>
+  select(animal_category, day_time) |>
+  count(animal_category, day_time)
+
+
+```
+
+```{r}
+# two prop z-test
+# Number of nighttime in each sample
+pet <- 1636
+wild <- 570
+
+# Total number of animals in each sample
+n_pet <- 4668
+n_wild <- 1898
+
+# Calculate sample proportions
+p1 <- pet / n_pet
+p2 <- wild / n_wild
+
+# Combined proportion
+p_combined <- (pet + wild) / (n_pet + n_wild)
+
+# Standard error
+se <- sqrt(p_combined * (1 - p_combined) * (1/n_pet + 1/n_wild))
+
+# Z-score
+z <- (p1 - p2) / se
+
+# P-value
+p_value <- 2 * pnorm(-abs(z))
+
+# Check sample sizes
+p1
+p2 
+n_pet
+n_wild
+n_pet*p1
+n_pet*(1-p1)
+n_wild*p2
+n_wild*(1-p2)
+```
+
+
