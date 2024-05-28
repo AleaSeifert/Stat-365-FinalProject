@@ -3,13 +3,13 @@ title: "Title of Report"
 date: last-modified
 date-format: "MMMM D, YYYY"
 author: 
-    - name: First Author
+    - name: Libby Brill
       affil-id: 1
-    - name: Second Author
+    - name: Sophia Freije
       affil-id: 1
-    - name: Third Author
+    - name: Jett Palmer
       affil-id: 1
-    - name: Fourth Author
+    - name: Alea Seifert
       affil-id: 1
 affiliations:
     - id: 1
@@ -37,12 +37,34 @@ bibliography: references.bib
 ```{r}
 #| label: setup
 library(tidyverse)
-library(palmerpenguins)
 ```
 
 ```{r}
 #| label: data-cleaning
 # this is where you might put some data cleaning steps
+
+animals_new <- animals |>
+  filter(cal_year < 2021) |>
+  mutate(date_time_of_call = dmy_hm(date_time_of_call),
+         day_time = if_else(hour(date_time_of_call) < 6 | hour(date_time_of_call) >= 18, "Night", "Day")) |>
+  filter(animal_group_parent %in% c("Cat", "Dog", "Rabbit", "Bird", "Fox", "Deer")) |>
+  mutate(animal_category = case_when(animal_group_parent == "Cat" ~ "Pet",
+                                     animal_group_parent == "Dog" ~ "Pet",
+                                     animal_group_parent == "Rabbit" ~ "Pet",
+                                     animal_group_parent == "Bird" ~ "Wild",
+                                     animal_group_parent == "Fox" ~ "Wild",
+                                     animal_group_parent == "Deer" ~ "Wild")) |>
+  group_by(cal_year, day_time, animal_category) |>
+  count() |>
+  pivot_wider(names_from = c(animal_category, day_time),
+              values_from = n) |>
+  mutate(Pets = Pet_Night / (Pet_Day + Pet_Night),
+         `Wild Animals` = Wild_Night / (Wild_Day + Wild_Night)) |>
+  select(cal_year, Pets, `Wild Animals`) |>
+  pivot_longer(cols = Pets:`Wild Animals`,
+               names_to = "Animal_Category",
+               values_to = "Prop_Night")
+
 ```
 
 ```{r}
@@ -75,25 +97,20 @@ Note! To cross reference a figure, the label must start with fig-xxx.
 #| fig-align: center
 #| fig-pos: "H"
 
-palmerpenguins::penguins |> 
-  ggplot(aes(x = bill_length_mm,
-             y = bill_depth_mm,
-             color = species,
-             shape = species
-             )
-         ) +
-  geom_point(alpha = 0.8) +
-  scale_x_continuous(limits = c(30,60), breaks = seq(20,60,10)) +
-  scale_y_continuous(limits = c(10,25), breaks = seq(10,25,5)) +
-  scale_color_brewer(palette = "Dark2") +
+animals_new |>
+  ggplot(aes(x = cal_year, y = Prop_Night, color = Animal_Category)) +
+  geom_line() +
+  labs(title = "Pets exceed Wildlife in Nighttime Rescues",
+       subtitle = "Proportion of Night Rescues",
+       y = "",
+       x = "",
+       fill = "Animal Type") +
+  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), minor_breaks = NULL) +
+  scale_y_continuous(limits = c(0, 1), minor_breaks = NULL, labels = scales::percent) +
   theme_bw() +
-  labs(title = "Plot title goes here",
-       x = "Bill Length (mm)",
-       y = "Bill Depth (mm)",
-       color = "Species",
-       shape = "Species"
-       )
+  scale_color_manual(values = c("orange3", "steelblue"))
 ```
+
 Supported by @tbl-penguin-summary, we can see abc. See <https://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf> for more about styling tables.
 
 Note! To cross reference a table, the label must start with tbl-xxx.
@@ -117,7 +134,7 @@ palmerpenguins::penguins |>
 ```
 
 ## Discussion {#discussion}
- 
+
 ## Conclusion {#conclusion}
 
 ## References {.unnumbered}

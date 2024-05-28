@@ -166,19 +166,17 @@ animals |>
 ```{r}
 # Updated graph
 animals_new |>
-  ggplot(aes(x = cal_year, y = Prop_Night, fill = Animal_Category)) +
-  geom_area(position = "identity") +
-  #geom_line() +
-  #geom_point() +
+  ggplot(aes(x = cal_year, y = Prop_Night, color = Animal_Category)) +
+  geom_line() +
   labs(title = "Pets exceed Wildlife in Nighttime Rescues",
        subtitle = "Proportion of Night Rescues",
        y = "",
        x = "",
        fill = "Animal Type") +
   scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), minor_breaks = NULL) +
-  scale_y_continuous(limits = c(0, 1), minor_breaks = NULL) +
+  scale_y_continuous(limits = c(0, 1), minor_breaks = NULL, labels = scales::percent) +
   theme_bw() +
-  scale_fill_manual(values = c("orange3", "steelblue"))
+  scale_color_manual(values = c("orange3", "steelblue"))
 
 ```
 
