@@ -149,7 +149,7 @@ animals |>
   pivot_wider(id_cols = Animal_Category, names_from = day_time, values_from = n) |>
   mutate(Total = Day + Night,
          Night_Prop = Night / Total) |>
-  select(Animal_Category, Night_Prop)
+  select(Animal_Category, Night_Prop, Total)
 
 
 #  pivot_wider(names_from = c(animal_group_parent, day_time),
@@ -257,4 +257,41 @@ ggplot(cl_animal, aes(x = animal_type)) +
   
 ```
 
+```{r}
+animals |>
+  filter(cal_year < 2021) |>
+  mutate(date_time_of_call = dmy_hm(date_time_of_call),
+         day_time = if_else(hour(date_time_of_call) < 6 | hour(date_time_of_call) >= 18, "Night", "Day")) |>
+  filter(animal_group_parent %in% c("Cat", "Dog", "Rabbit", "Bird", "Fox", "Deer")) |>
+  mutate(Animal_Category = case_when(animal_group_parent == "Cat" ~ "Pets",
+                                     animal_group_parent == "Dog" ~ "Pets",
+                                     animal_group_parent == "Rabbit" ~ "Pets",
+                                     animal_group_parent == "Bird" ~ "Wild Animals",
+                                     animal_group_parent == "Fox" ~ "Wild Animals",
+                                     animal_group_parent == "Deer" ~ "Wild Animals")) |>
+  group_by(day_time, Animal_Category) |>
+  count() |>
+  pivot_wider(id_cols = Animal_Category, names_from = day_time, values_from = n) |>
+  mutate(Total = Day + Night,
+         Night_Prop = (Night / Total),
+         Day_Prop = (Day / Total)) |>
+  select(Animal_Category, Night_Prop, Day_Prop, Total) |>
+  pivot_longer(cols = c(Night_Prop, Day_Prop), names_to = "Time_Prop", values_to = "Proportion") |>
+  pivot_wider(names_from = Animal_Category, values_from = c(Proportion, Total)) |>
+  mutate(across(starts_with("Proportion"), scales::percent, accuracy = 0.1)) |>
+  mutate(across(starts_with("Total"), as.character)) |>
+  rowwise() |>
+  mutate(across(starts_with("Proportion"), ~ paste(.x, " (n=", get(sub("Proportion_", "Total_", cur_column())), ")", sep=""))) |>
+  ungroup() |>
+  select(-starts_with("Total_")) |>
+  rename_with(~ gsub("Proportion_", "", .x), starts_with("Proportion_")) |>
+  kableExtra::kbl(
+    col.names = c("Time of Day", "Pets (Cat, Dog, Rabbit)", "Wild Animals (Bird, Fox, Deer)"),
+    align = c("l", "c", "c"),
+    booktabs = TRUE,
+    escape = FALSE
+  ) |>
+  kableExtra::kable_styling(full_width = TRUE, position = "center") |>
+  kableExtra::add_header_above(c(" " = 1, "Pets" = 1, "Wild Animals" = 1))
+```
 

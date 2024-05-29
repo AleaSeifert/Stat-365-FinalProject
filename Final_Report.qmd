@@ -37,13 +37,17 @@ bibliography: references.bib
 ```{r}
 #| label: setup
 library(tidyverse)
+library(ggrepel)
+library(ggtext)
 ```
 
 ```{r}
 #| label: data-cleaning
 # this is where you might put some data cleaning steps
 
-animals_new <- animals |>
+source("data_cleaning.R")
+
+animals_clean <- animals |>
   filter(cal_year < 2021) |>
   mutate(date_time_of_call = dmy_hm(date_time_of_call),
          day_time = if_else(hour(date_time_of_call) < 6 | hour(date_time_of_call) >= 18, "Night", "Day")) |>
@@ -69,7 +73,9 @@ animals_new <- animals |>
 
 ```{r}
 #| label: data-analysis
+
 # you might choose to run your analysis here or in a separate script. Save your output for later.
+prop.test(x = c(1636, 570), n= c(4668, 1898), alternative = "greater")
 ```
 
 ## Introduction {#intro}
@@ -84,7 +90,7 @@ According to @tuan2015, it is said to xxx. Supported by this we found xyz [@wiwa
 
 ## Results {#results}
 
-You could use in line code to provide results such as: Information about `r nrow(penguins)` penguins were collected and made available by Dr. Kristen Gorman and the Palmer Station, Antarctica LTER, a member of the Long Term Ecological Research Network.
+You could use in line code to provide results such as: Information about  penguins were collected and made available by Dr. Kristen Gorman and the Palmer Station, Antarctica LTER, a member of the Long Term Ecological Research Network.
 
 As shown in @fig-penguin-plot, we can see abc. See <https://quarto.org/docs/authoring/cross-references.html> for more about cross referencing plots.
 
@@ -97,18 +103,26 @@ Note! To cross reference a figure, the label must start with fig-xxx.
 #| fig-align: center
 #| fig-pos: "H"
 
-animals_new |>
+animals_clean |>
   ggplot(aes(x = cal_year, y = Prop_Night, color = Animal_Category)) +
-  geom_line() +
-  labs(title = "Pets exceed Wildlife in Nighttime Rescues",
-       subtitle = "Proportion of Night Rescues",
+  geom_line(aes(linetype = Animal_Category, color = Animal_Category), linewidth = 0.75, show.legend = FALSE) +
+  geom_point(aes(shape = Animal_Category, color = Animal_Category), size = 2.5, show.legend = FALSE) +
+  labs(title = "<span style='color: orange3;'>Pets</span> exceed <span style='color: steelblue;'>Wildlife</span> in % of Night-time Rescues over Time",
        y = "",
        x = "",
-       fill = "Animal Type") +
+       #subtitle = "Percentage of Night-time Rescues",
+       linetype = "Animal Type",
+       color = "Animal Type",
+       shape = "Animal Type") +
   scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), minor_breaks = NULL) +
-  scale_y_continuous(limits = c(0, 1), minor_breaks = NULL, labels = scales::percent) +
+  scale_y_continuous(limits = c(0, 0.5), minor_breaks = NULL, labels = scales::percent) +
   theme_bw() +
-  scale_color_manual(values = c("orange3", "steelblue"))
+  theme(#legend.position = c(0.8, 0.20),
+  #  legend.box.background = element_rect(color = "black"),
+   plot.title = element_markdown(hjust = 0.5)) +
+  scale_color_manual(values = c("orange3", "steelblue")) +
+  scale_linetype_manual(values = c("solid", "dashed")) +
+  scale_shape_manual(values = c(17, 16))
 ```
 
 Supported by @tbl-penguin-summary, we can see abc. See <https://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf> for more about styling tables.
@@ -116,24 +130,41 @@ Supported by @tbl-penguin-summary, we can see abc. See <https://haozhu233.github
 Note! To cross reference a table, the label must start with tbl-xxx.
 
 ```{r}
-#| label: tbl-penguin-summary
+#| label: tbl-night-summary
 #| tbl-cap: "Put caption here."
 #| tbl-pos: "H"
 
-palmerpenguins::penguins |> 
-  group_by(species) |> 
-  summarize(avg_bill_length = mean(bill_length_mm, na.rm = T),
-            sd_bill_length = sd(bill_length_mm, na.rm = T)
-            ) |> 
-  kableExtra::kbl(digits = 1,
-                  col.names = c("Species", 
-                                "Average Bill Length (mm)",
-                                "Standard Deviation of Bill Length (mm)"),
+animals |>
+  filter(cal_year < 2021) |>
+  mutate(date_time_of_call = dmy_hm(date_time_of_call),
+         day_time = if_else(hour(date_time_of_call) < 6 | hour(date_time_of_call) >= 18, "Night", "Day")) |>
+  filter(animal_group_parent %in% c("Cat", "Dog", "Rabbit", "Bird", "Fox", "Deer")) |>
+  mutate(Animal_Category = case_when(animal_group_parent == "Cat" ~ "Pets",
+                                     animal_group_parent == "Dog" ~ "Pets",
+                                     animal_group_parent == "Rabbit" ~ "Pets",
+                                     animal_group_parent == "Bird" ~ "Wild Animals",
+                                     animal_group_parent == "Fox" ~ "Wild Animals",
+                                     animal_group_parent == "Deer" ~ "Wild Animals")) |>
+  group_by(day_time, Animal_Category) |>
+  count() |>
+pivot_wider(id_cols = Animal_Category, names_from = day_time, values_from = n) |>
+  mutate(Total = Day + Night,
+         Night_Prop = (Night / Total)) |>
+  select(Animal_Category, Night_Prop, Total) |>
+  mutate(Night_Prop = scales::percent(Night_Prop, accuracy = 0.1)) |> 
+  kableExtra::kbl(
+                  col.names = c("Animal Type", 
+                                "% of Rescues Occuring at Night",
+                                "Total Number of Animals"),
+                  align = c("l", "c", "c"),
                   booktabs = TRUE
                   )
+
+
 ```
 
 ## Discussion {#discussion}
+@tbl-night-summary
 
 ## Conclusion {#conclusion}
 
