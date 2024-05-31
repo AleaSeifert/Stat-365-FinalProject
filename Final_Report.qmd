@@ -86,8 +86,6 @@ The London Fire Brigade has spent over 2.5 million pounds (\~3.2 million US doll
 
 The animal rescue calls can be divided into two main categories, pets and wild animals. There were more calls made for pets compared to wild animals. Taking these unequal counts into consideration, we aim to discover if there is a discernible difference in the proportion of night-time rescues between pets and wild animals.
 
-According to @tuan2015, it is said to xxx. Supported by this we found xyz [@wiwanitkit2010dengue].
-
 ## Data and Methods
 
 ### Data Description
@@ -102,7 +100,7 @@ In order to assess variance between different groups of animals, we needed to de
 
 There is a sufficient number of night-time and day-time rescues for both groups, and we assume that observations are independent from each other, with one animal rescue not influencing the next. Thus, we conducted a two-proportion z-test to investigate whether the proportion of night-time rescues is different between pets and wild animals.
 
-The analyses were conducted in @Manual using INSERT PACKAGE CITATIONS.
+The analyses were conducted in R version 4.4.0 [@r2024]. We used tidyverse package [@tidyverse2019], ggtext [@ggtext2022], here [@here2020], writexl [@writexl2024], and tinytex [@tinytex2024].
 
 ## Results {#results}
 
