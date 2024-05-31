@@ -43,7 +43,7 @@ library(ggtext)
 
 ```{r}
 #| label: data-cleaning
-# this is where you might put some data cleaning steps
+# Data Cleaning
 
 source("data_cleaning.R")
 
@@ -71,11 +71,11 @@ animals_clean <- animals |>
 
 ```
 
-```{r}
+```{r, results='hide'}
 #| label: data-analysis
-
 # you might choose to run your analysis here or in a separate script. Save your output for later.
-prop.test(x = c(1636, 570), n= c(4668, 1898), alternative = "greater")
+
+prop.test(x = c(1636, 570), n= c(4668, 1898), alternative = "greater") 
 ```
 
 ## Introduction {#intro}
@@ -90,16 +90,11 @@ According to @tuan2015, it is said to xxx. Supported by this we found xyz [@wiwa
 
 ## Results {#results}
 
-You could use in line code to provide results such as: Information about  penguins were collected and made available by Dr. Kristen Gorman and the Palmer Station, Antarctica LTER, a member of the Long Term Ecological Research Network.
-
-As shown in @fig-penguin-plot, we can see abc. See <https://quarto.org/docs/authoring/cross-references.html> for more about cross referencing plots.
-
-Note! To cross reference a figure, the label must start with fig-xxx.
 
 ```{r}
-#| label: fig-penguin-plot
-#| fig-cap: "Your figure caption."
-#| fig-alt: "Your figure alternative text."
+#| label: fig-night-animal
+#| fig-cap: "The figure represents the percentage of night-time animal rescues by the London Fire Brigade from 2009 to 2020. Grouped by pets (cat, dog, rabbit) and wild animals (bird, fox, deer), the plot reveals that the percent of pet night rescues is larger than wildlife night rescues across all years."
+#| fig-alt: "The graph depicts a line chart with the x-axis as year, from 2009 to 2020, and the percent of night-time rescues, from 0 percent to 50 percent. There are two lines on the graph, one depicting percentage of night-time rescues of pets over time in orange and the other is depicting percentage of night-time rescues of wild animals over time in blue. Overall, the pet line appears to be slightly higher than the wild animal line for all years, with some variation."
 #| fig-align: center
 #| fig-pos: "H"
 
@@ -113,7 +108,8 @@ animals_clean |>
        #subtitle = "Percentage of Night-time Rescues",
        linetype = "Animal Type",
        color = "Animal Type",
-       shape = "Animal Type") +
+       shape = "Animal Type",
+       caption = "Data Source: London Data Store") +
   scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), minor_breaks = NULL) +
   scale_y_continuous(limits = c(0, 0.5), minor_breaks = NULL, labels = scales::percent) +
   theme_bw() +
@@ -125,13 +121,10 @@ animals_clean |>
   scale_shape_manual(values = c(17, 16))
 ```
 
-Supported by @tbl-penguin-summary, we can see abc. See <https://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf> for more about styling tables.
-
-Note! To cross reference a table, the label must start with tbl-xxx.
 
 ```{r}
 #| label: tbl-night-summary
-#| tbl-cap: "Put caption here."
+#| tbl-cap: "The table depicts the percentage of night-time animal rescues by the London Fire Brigade from 2009 to 2020 of pets and wild animals. The table also includes the total number of calls for each group."
 #| tbl-pos: "H"
 
 animals |>
@@ -160,11 +153,11 @@ pivot_wider(id_cols = Animal_Category, names_from = day_time, values_from = n) |
                   booktabs = TRUE
                   )
 
-
 ```
 
 ## Discussion {#discussion}
 @tbl-night-summary
+@fig-night-animal
 
 ## Conclusion {#conclusion}
 
