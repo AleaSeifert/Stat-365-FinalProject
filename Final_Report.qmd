@@ -37,7 +37,7 @@ bibliography: references.bib
 ```{r}
 #| label: setup
 library(tidyverse)
-library(ggrepel)
+# library(ggrepel)
 library(ggtext)
 ```
 
