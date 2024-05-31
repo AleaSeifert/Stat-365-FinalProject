@@ -14,7 +14,7 @@ author:
 affiliations:
     - id: 1
       name: Department of Statistics, Cal Poly - SLO
-abstract: "Your abstract goes here (max ~250 words)."
+abstract: "The London Fire Brigade (LBF) is a firefighting and rescue organization that receives various calls regarding animal rescues from London citizens. Within the LBF recorded rescues, spanning from 2009 to 2020, there was a noticeable difference observed in the number of wild animals (n = 4668) and pet calls (n = 1898). We analyzed data using statistical software to understand the impact of time on the frequency of animal rescues based on animal type. Through a two-proportion z-test, we found a discernible difference in the percentage of night-time incidents comparing pets and wild animals. With a broad span of services conducted by the LBF, information regarding the frequency of pet rescues during the night-time is helpful when allocating resources and scheduling staff. This allows the LBF to be better equipped to handle pet rescue incidents most efficiently during the night shift."
 format: 
   pdf:
     number-sections: true
@@ -78,10 +78,6 @@ animals_clean <- animals |>
 prop.test(x = c(1636, 570), n= c(4668, 1898), alternative = "greater") 
 ```
 
-## Abstract
-
-The London Fire Brigade (LBF) is a firefighting and rescue organization that receives various calls regarding animal rescues from London citizens. Within the LBF recorded rescues, spanning from 2009 to 2020, there was a noticeable difference observed in the number of wild animals (n = 4668) and pet calls (n = 1898). We analyzed data using statistical software to understand the impact of time on the frequency of animal rescues based on animal type. Through a two-proportion z-test, we found a discernible difference in the percentage of night-time incidents comparing pets and wild animals. With a broad span of services conducted by the LBF, information regarding the frequency of pet rescues during the night-time is helpful when allocating resources and scheduling staff. This allows the LBF to be better equipped to handle pet rescue incidents most efficiently during the night shift.
-
 ## Introduction {#intro}
 
 Every year, hundreds of animals across London find themselves in need of rescue - ranging from cats trapped in a tree to ducklings fallen into storm drains. But who does one call when they find an animal in distress? Members of the public are encouraged to first call the Royal Society for the Prevention of Cruelty to Animals (RSPCA) when they encounter an animal in trouble. However, in situations where specialized equipment is required or when the caller forgoes reporting to RSPCA first, the London Fire Brigade (LFB) is summoned.
@@ -98,7 +94,7 @@ According to @tuan2015, it is said to xxx. Supported by this we found xyz [@wiwa
 
 Each observation represents one concerned citizen’s call to the London Fire Brigade about an animal in distress. The only qualification for a phone call to be recorded was it had to concern an animal rescue within one of London’s 32 boroughs - any incident involving or resulting in animal injury or death was not recorded. After each call, the time that the call was made (including the date and hour of the call) was documented. Then, after the firefighters performed the rescue, information pertaining to the incident’s exact location within London, type of animal, type of rescue performed, and cost were recorded. For the purpose of answering if there is a significant difference in proportions between pets and wild animals night-time rescues, we will only examine the time of day, year, and type of animal.
 
-The data were collected from January 2009 were updated monthly to the London Data Store [needs citation here] until May 2021. Considering the 2021 data does not cover the entire year, we only examined calls made up to the end of 2020. Over this twelve year period, 7,225 animal rescue calls were made.
+The data were collected from January 2009 were updated monthly to the London Data Store \[needs citation here\] until May 2021. Considering the 2021 data does not cover the entire year, we only examined calls made up to the end of 2020. Over this twelve year period, 7,225 animal rescue calls were made.
 
 ### Statistical Analysis
 
@@ -107,7 +103,6 @@ In order to assess variance between different groups of animals, we needed to de
 There is a sufficient number of night-time and day-time rescues for both groups, and we assume that observations are independent from each other, with one animal rescue not influencing the next. Thus, we conducted a two-proportion z-test to investigate whether the proportion of night-time rescues is different between pets and wild animals.
 
 The analyses were conducted in @Manual using INSERT PACKAGE CITATIONS.
-
 
 ## Results {#results}
 
@@ -178,7 +173,7 @@ animals_clean |>
   scale_shape_manual(values = c(17, 16))
 ```
 
-Figure 2 indicates greater variability within the wild animal group which may be a product of the lower comparative sample size. Importantly, we note that the margin of error does not overlap between the two groups, providing visual evidence of a significant difference in proportions of night-time incidents. Consequently, after running the two-proportion z-test, we found a discernible difference in the proportion of night-time incidents between pets and wild animals (X2 = 14.991;  df = 1; p-value < 0.0001).
+Figure 2 indicates greater variability within the wild animal group which may be a product of the lower comparative sample size. Importantly, we note that the margin of error does not overlap between the two groups, providing visual evidence of a significant difference in proportions of night-time incidents. Consequently, after running the two-proportion z-test, we found a discernible difference in the proportion of night-time incidents between pets and wild animals (X2 = 14.991; df = 1; p-value \< 0.0001).
 
 INSERT CONFIDENCE INTERVAL PLOT
 
@@ -199,6 +194,5 @@ While our analysis specifically focused on the proportion of night-time rescues,
 Future research might delve deeper into the specifics of these rescue incidents, such as the types of rescues (e.g., rescues from a height, water rescues, rescues below ground) that are most common for both pets and wild animals. Such analyses could further enhance the LFB's preparedness and response strategies, ensuring that they are well-equipped to handle the challenges presented by different rescue scenarios.
 
 It is also important to acknowledge the limitations of our study. Given that our data disregards any animal injuries or death, our results can not be applied to calls where animals are life threatening predicaments. Additionally, our analysis encompasses the entire population of reported rescues by the LFB from 2009 to 2021, thus there is no larger population to which we can generalize our results. Nonetheless, our results provide a foundational understanding of animal rescue patterns in London, offering practical insights that can inform both public safety measures and the operational strategies of the LFB.
-
 
 ## References {.unnumbered}
