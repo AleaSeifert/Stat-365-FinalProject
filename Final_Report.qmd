@@ -1,5 +1,5 @@
 ---
-title: "Title of Report"
+title: "London Fire Brigade Animal Rescues"
 date: last-modified
 date-format: "MMMM D, YYYY"
 author: 
@@ -14,7 +14,7 @@ author:
 affiliations:
     - id: 1
       name: Department of Statistics, Cal Poly - SLO
-abstract: "The London Fire Brigade (LBF) is a firefighting and rescue organization that receives various calls regarding animal rescues from London citizens. Within the LBF recorded rescues, spanning from 2009 to 2020, there was a noticeable difference observed in the number of wild animals (n = 4668) and pet calls (n = 1898). We analyzed data using statistical software to understand the impact of time on the frequency of animal rescues based on animal type. Through a two-proportion z-test, we found a discernible difference in the percentage of night-time incidents comparing pets and wild animals. With a broad span of services conducted by the LBF, information regarding the frequency of pet rescues during the night-time is helpful when allocating resources and scheduling staff. This allows the LBF to be better equipped to handle pet rescue incidents most efficiently during the night shift."
+abstract: "The London Fire Brigade (LBF) is a firefighting and rescue organization that receives various calls regarding animal rescues from London citizens. Within the LBF's recorded rescues, spanning from 2009 to 2020, there was a noticeable difference observed in the number of wild animals (n = 4668) and pet calls (n = 1898). We analyzed data using statistical software to understand the impact of time of day on the frequency of animal rescues based on animal type. Through a two-proportion z-test, we found a discernible difference in the percentage of night-time incidents comparing pets and wild animals. With a broad span of services conducted by the LBF, information regarding the frequency of rescues during the night-time is helpful when allocating resources and scheduling staff. This allows the LBF to be better equipped to handle animal rescues incidents during the night shift."
 format: 
   pdf:
     number-sections: true
@@ -37,7 +37,6 @@ bibliography: references.bib
 ```{r}
 #| label: setup
 library(tidyverse)
-library(ggrepel)
 library(ggtext)
 ```
 
@@ -80,47 +79,31 @@ prop.test(x = c(1636, 570), n= c(4668, 1898), alternative = "greater")
 
 ## Introduction {#intro}
 
-According to @tuan2015, it is said to xxx. Supported by this we found xyz [@wiwanitkit2010dengue].
+Every year, hundreds of animals across London find themselves in need of rescue - ranging from cats trapped in a tree to ducklings fallen into storm drains. But who does one call when they find an animal in distress? Members of the public are encouraged to first call the Royal Society for the Prevention of Cruelty to Animals (RSPCA) when they encounter an animal in trouble. However, in situations where specialized equipment is required or when the caller forgoes reporting to RSPCA first, the London Fire Brigade (LFB) is summoned.
+
+The London Fire Brigade has spent over 2.5 million pounds (\~3.2 million US dollars) on animal rescues [@boyle2023]. Considering that the fire brigade's primary objective is safeguarding the people of London and protecting their property from fire, not animal safety, this is quite a substantial sum. While we believe the fire brigade should continue promoting animal welfare, we aim to reduce their burden and increase readiness by examining the most difficult time for animal rescue: night-time. Animal rescues made during the night are more difficult because of the lower visibility and need for adherence to quiet hours as residents sleep.
+
+The animal rescue calls can be divided into two main categories, pets and wild animals. There were more calls made for pets compared to wild animals. Taking these unequal counts into consideration, we aim to discover if there is a discernible difference in the proportion of night-time rescues between pets and wild animals.
 
 ## Data and Methods
 
-### Data Collection
+### Data Description
+
+Each observation represents one concerned citizen’s call to the London Fire Brigade about an animal in distress. The only qualification for a phone call to be recorded was it had to concern an animal rescue within one of London’s 32 boroughs - any incident involving or resulting in animal injury or death was not recorded. After each call, the time that the call was made (including the date and hour of the call) was documented. Then, after the firefighters performed the rescue, information pertaining to the incident’s exact location within London, type of animal, type of rescue performed, and cost were recorded. For the purpose of answering if there is a significant difference in proportions between pets and wild animals night-time rescues, we will only examine the time of day, year, and type of animal.
+
+The data were collected from January 2009 were updated monthly to the London Data Store [@lfbdata2016] until May 2021. Considering the 2021 data does not cover the entire year, we only examined calls made up to the end of 2020. Over this twelve year period, 7,544 animal rescue calls were made.
 
 ### Statistical Analysis
 
+In order to assess variance between different groups of animals, we needed to define some species as “wild” and others as “pets.” While this process was ultimately subjective, we consulted online sources to guide the decision [@messmer2020]. We labeled cats, dogs, and rabbits as pets, and considered birds, foxes, and deer as wild animals. Similarly, we decided that incidents occurring from 6:00 pm to 5:59 am would be considered night-time rescues whereas the remaining times are day-time incidents
+
+There was a sufficient number of night-time and day-time rescues for both groups, and we assumed that observations were independent from each other, with one animal rescue not influencing the next. Thus, we conducted a two-proportion z-test to investigate whether the proportion of night-time rescues is different between pets and wild animals.
+
+The analyses were conducted in R version 4.4.0 [@r2024]. We used tidyverse package [@tidyverse2019], ggtext [@ggtext2022], here [@here2020], writexl [@writexl2024], and tinytex [@tinytex2024].
+
 ## Results {#results}
 
-
-```{r}
-#| label: fig-night-animal
-#| fig-cap: "The figure represents the percentage of night-time animal rescues by the London Fire Brigade from 2009 to 2020. Grouped by pets (cat, dog, rabbit) and wild animals (bird, fox, deer), the plot reveals that the percent of pet night rescues is larger than wildlife night rescues across all years."
-#| fig-alt: "The graph depicts a line chart with the x-axis as year, from 2009 to 2020, and the percent of night-time rescues, from 0 percent to 50 percent. There are two lines on the graph, one depicting percentage of night-time rescues of pets over time in orange and the other is depicting percentage of night-time rescues of wild animals over time in blue. Overall, the pet line appears to be slightly higher than the wild animal line for all years, with some variation."
-#| fig-align: center
-#| fig-pos: "H"
-
-animals_clean |>
-  ggplot(aes(x = cal_year, y = Prop_Night, color = Animal_Category)) +
-  geom_line(aes(linetype = Animal_Category, color = Animal_Category), linewidth = 0.75, show.legend = FALSE) +
-  geom_point(aes(shape = Animal_Category, color = Animal_Category), size = 2.5, show.legend = FALSE) +
-  labs(title = "<span style='color: orange3;'>Pets</span> exceed <span style='color: steelblue;'>Wild Animals</span> in % of Night-time Rescues over Time",
-       y = "",
-       x = "",
-       #subtitle = "Percentage of Night-time Rescues",
-       linetype = "Animal Type",
-       color = "Animal Type",
-       shape = "Animal Type",
-       caption = "Data Source: London Data Store") +
-  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), minor_breaks = NULL) +
-  scale_y_continuous(limits = c(0, 0.5), minor_breaks = NULL, labels = scales::percent) +
-  theme_bw() +
-  theme(#legend.position = c(0.8, 0.20),
-  #  legend.box.background = element_rect(color = "black"),
-   plot.title = element_markdown(hjust = 0.5)) +
-  scale_color_manual(values = c("orange3", "steelblue")) +
-  scale_linetype_manual(values = c("solid", "dashed")) +
-  scale_shape_manual(values = c(17, 16))
-```
-
+The proportion of night-time incidents for pets and wild animals are 35% and 30%, respectively (@tbl-night-summary). We should note that a much larger number of pet incidents occurred, compared to wild animals, when investigating sample sizes.
 
 ```{r}
 #| label: tbl-night-summary
@@ -152,8 +135,47 @@ pivot_wider(id_cols = Animal_Category, names_from = day_time, values_from = n) |
                   align = c("l", "c", "c"),
                   booktabs = TRUE
                   )
-
 ```
+
+@fig-night-animal further illustrates these results while also indicating trends over time. Notably, there were several years in which the year-over-year trend was different between the two groups. For example, from 2017 to 2019, the proportion of night-time incidents for wild animals dipped, contrasting the pet proportions that showed continuous increases.
+
+```{r}
+#| label: fig-night-animal
+#| fig-cap: "The figure represents the percentage of night-time animal rescues by the London Fire Brigade from 2009 to 2020. Grouped by pets (cat, dog, rabbit) and wild animals (bird, fox, deer), the plot reveals that the percent of pet night rescues is larger than wildlife night rescues across all years."
+#| fig-alt: "The graph depicts a line chart with the x-axis as year, from 2009 to 2020, and the percent of night-time rescues, from 0 percent to 50 percent. There are two lines on the graph, one depicting percentage of night-time rescues of pets over time in orange and the other is depicting percentage of night-time rescues of wild animals over time in blue. Overall, the pet line appears to be slightly higher than the wild animal line for all years, with some variation."
+#| fig-align: center
+#| fig-pos: "H"
+
+label_data <- data.frame(cal_year = c(2010, 2019), 
+                         Prop_Night = c(0.4, 0.2),
+                         Animal_Category = c("Pets", "Wild Animals")
+)
+
+animals_clean |>
+  ggplot(aes(x = cal_year, y = Prop_Night, color = Animal_Category)) +
+  geom_line(aes(linetype = Animal_Category, color = Animal_Category), linewidth = 0.75, show.legend = FALSE) +
+  geom_point(aes(shape = Animal_Category, color = Animal_Category), size = 2.5, show.legend = FALSE) +
+  labs(title = "<span style='color: orange3;'>Pets</span> exceed <span style='color: steelblue;'>Wildlife</span> in % of Night-time Rescues over Time",
+       y = "",
+       x = "",
+       #subtitle = "Percentage of Night-time Rescues",
+       linetype = "Animal Type",
+       color = "Animal Type",
+       shape = "Animal Type",
+       caption = "Data Source: London Data Store") +
+  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), minor_breaks = NULL) +
+  scale_y_continuous(limits = c(0, 0.5), minor_breaks = NULL, labels = scales::percent) +
+  theme_bw() +
+  theme(#legend.position = c(0.8, 0.20),
+  #  legend.box.background = element_rect(color = "black"),
+   plot.title = element_markdown(hjust = 0.5)) +
+  scale_color_manual(values = c("orange3", "steelblue")) +
+  scale_linetype_manual(values = c("solid", "dashed")) +
+  scale_shape_manual(values = c(17, 16))
+  
+```
+
+@fig-cl indicates greater variability within the wild animal group which may be a product of the lower comparative sample size. Importantly, we note that the margin of error does not overlap between the two groups, providing visual evidence of a significant difference in proportions of night-time incidents. Consequently, after running the two-proportion z-test, we found a discernible difference in the proportion of night-time incidents between pets and wild animals (X2 = 14.991; df = 1; p-value \< 0.0001).
 
 ```{r}
 #| label: fig-cl
@@ -190,9 +212,23 @@ ggplot(cl_animal, aes(x = animal_type)) +
 ```
 
 ## Discussion {#discussion}
-@tbl-night-summary
-@fig-night-animal
+
+Based on our findings, we can draw a few observations about LFB animal rescues. Namely, we found there is a significant difference between the proportion of pet rescues and wild animal rescues during the night-time hour. This means that pets proportionally get into trouble at night more often than wild animals. To fully understand if this difference has any practical significance we recommend consulting with licensed wildlife rehabbers or other professional animal caretakers. These professionals might better understand how various external factors other than time of day influence animal incidents. For instance, time of year might be a factor to include in future studies as spring months that fall under “baby season” could potentially have more incidents.
+
+It is important to note that we can not generalize our findings to all types of pets. Domesticated animals including horses, goats, and guinea pigs were not included. The subjective categorization of animals into pet and wild groups is also a limitation of our findings. The data do not provide information to check the accuracy of our categorization and, thus, it is possible that some animals are incorrectly represented as in our analysis. For instance, domestic bird incidents may be tabulated in our results under wild animal incidents.
 
 ## Conclusion {#conclusion}
 
+Our analysis of the London Fire Brigade’s data on animal rescues provided valuable insights into the patterns of night-time incidents involving pets and wild animals. Our findings indicate that pets (defined as dogs, cats, and rabbits) have a significantly higher rate of night-time rescues compared to wild animals (foxes, deer, and birds). This suggests a need for increased public awareness regarding pet safety. Ensuring that pets are in secure locations overnight can potentially reduce the frequency of night-time rescues, enhancing both pet safety and the efficiency of rescue operations.
+
+While our analysis specifically focused on the proportion of night-time rescues, it can be noted that the majority of incidents for both pets and wild animals occurred during the day, with night-time rescues making up less than 36% of the total incidents for both groups. This information is important for the LFB, as it highlights the periods when more resources and personnel are likely needed to effectively respond to animal rescue calls.
+
+Future research might delve deeper into the specifics of these rescue incidents, such as the types of rescues (e.g., rescues from a height, water rescues, rescues below ground) that are most common for both pets and wild animals. Such analyses could further enhance the LFB's preparedness and response strategies, ensuring that they are well-equipped to handle the challenges presented by different rescue scenarios.
+
+It is also important to acknowledge the limitations of our study. Given that our data disregards any animal injuries or death, our results can not be applied to calls where animals are life threatening predicaments. Additionally, our analysis encompasses the entire population of reported rescues by the LFB from 2009 to 2021, thus there is no larger population to which we can generalize our results. Nonetheless, our results provide a foundational understanding of animal rescue patterns in London, offering practical insights that can inform both public safety measures and the operational strategies of the LFB.
+
+{{< pagebreak >}}
+
 ## References {.unnumbered}
+
+
