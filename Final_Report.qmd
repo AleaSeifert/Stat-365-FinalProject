@@ -81,7 +81,7 @@ prop.test(x = c(1636, 570), n= c(4668, 1898), alternative = "greater")
 
 Every year, hundreds of animals across London find themselves in need of rescue - ranging from cats trapped in a tree to ducklings fallen into storm drains. But who does one call when they find an animal in distress? Members of the public are encouraged to first call the Royal Society for the Prevention of Cruelty to Animals (RSPCA) when they encounter an animal in trouble. However, in situations where specialized equipment is required or when the caller forgoes reporting to RSPCA first, the London Fire Brigade (LFB) is summoned.
 
-The London Fire Brigade has spent over 2.5 million pounds (\~3.2 million US dollars) on animal rescues (Boyle, 2023). Considering that the fire brigade's primary objective is safeguarding the people of London and protecting their property from fire, not animal safety, this is quite a substantial sum. While we believe the fire brigade should continue promoting animal welfare, we aim to reduce their burden and increase readiness by examining the most difficult time for animal rescue: night-time. Animal rescues made during the night are more difficult because of the lower visibility and need for adherence to quiet hours as residents sleep.
+The London Fire Brigade has spent over 2.5 million pounds (\~3.2 million US dollars) on animal rescues [@boyle2023]. Considering that the fire brigade's primary objective is safeguarding the people of London and protecting their property from fire, not animal safety, this is quite a substantial sum. While we believe the fire brigade should continue promoting animal welfare, we aim to reduce their burden and increase readiness by examining the most difficult time for animal rescue: night-time. Animal rescues made during the night are more difficult because of the lower visibility and need for adherence to quiet hours as residents sleep.
 
 The animal rescue calls can be divided into two main categories, pets and wild animals. There were more calls made for pets compared to wild animals. Taking these unequal counts into consideration, we aim to discover if there is a discernible difference in the proportion of night-time rescues between pets and wild animals.
 
@@ -91,11 +91,11 @@ The animal rescue calls can be divided into two main categories, pets and wild a
 
 Each observation represents one concerned citizen’s call to the London Fire Brigade about an animal in distress. The only qualification for a phone call to be recorded was it had to concern an animal rescue within one of London’s 32 boroughs - any incident involving or resulting in animal injury or death was not recorded. After each call, the time that the call was made (including the date and hour of the call) was documented. Then, after the firefighters performed the rescue, information pertaining to the incident’s exact location within London, type of animal, type of rescue performed, and cost were recorded. For the purpose of answering if there is a significant difference in proportions between pets and wild animals night-time rescues, we will only examine the time of day, year, and type of animal.
 
-The data were collected from January 2009 were updated monthly to the London Data Store \[needs citation here\] until May 2021. Considering the 2021 data does not cover the entire year, we only examined calls made up to the end of 2020. Over this twelve year period, 7,544 animal rescue calls were made.
+The data were collected from January 2009 were updated monthly to the London Data Store [@lfbdata2016] until May 2021. Considering the 2021 data does not cover the entire year, we only examined calls made up to the end of 2020. Over this twelve year period, 7,544 animal rescue calls were made.
 
 ### Statistical Analysis
 
-In order to assess variance between different groups of animals, we needed to define some species as “wild” and others as “pets.” While this process was ultimately subjective, we consulted online sources to guide the decision (Messmer 2020). We labeled cats, dogs, and rabbits as pets, and considered birds, foxes, and deer as wild animals. Similarly, we decided that incidents occurring from 6:00 pm to 5:59 am would be considered night-time rescues whereas the remaining times are day-time incidents
+In order to assess variance between different groups of animals, we needed to define some species as “wild” and others as “pets.” While this process was ultimately subjective, we consulted online sources to guide the decision [@messmer2020]. We labeled cats, dogs, and rabbits as pets, and considered birds, foxes, and deer as wild animals. Similarly, we decided that incidents occurring from 6:00 pm to 5:59 am would be considered night-time rescues whereas the remaining times are day-time incidents
 
 There was a sufficient number of night-time and day-time rescues for both groups, and we assumed that observations were independent from each other, with one animal rescue not influencing the next. Thus, we conducted a two-proportion z-test to investigate whether the proportion of night-time rescues is different between pets and wild animals.
 
@@ -103,7 +103,7 @@ The analyses were conducted in R version 4.4.0 [@r2024]. We used tidyverse packa
 
 ## Results {#results}
 
-The proportion of night-time incidents for pets and wild animals are 35% and 30%, respectively (Table 1). We should note that a much larger number of pet incidents occurred, compared to wild animals, when investigating sample sizes.
+The proportion of night-time incidents for pets and wild animals are 35% and 30%, respectively (@tbl-night-summary). We should note that a much larger number of pet incidents occurred, compared to wild animals, when investigating sample sizes.
 
 ```{r}
 #| label: tbl-night-summary
@@ -179,8 +179,6 @@ INSERT CONFIDENCE INTERVAL PLOT
 Based on our findings, we can draw a few observations about LFB animal rescues. Namely, we found there is a significant difference between the proportion of pet rescues and wild animal rescues during the night-time hour. This means that pets proportionally get into trouble at night more often than wild animals. To fully understand if this difference has any practical significance we recommend consulting with licensed wildlife rehabbers or other professional animal caretakers. These professionals might better understand how various external factors other than time of day influence animal incidents. For instance, time of year might be a factor to include in future studies as spring months that fall under “baby season” could potentially have more incidents.
 
 It is important to note that we can not generalize our findings to all types of pets. Domesticated animals including horses, goats, and guinea pigs were not included. The subjective categorization of animals into pet and wild groups is also a limitation of our findings. The data do not provide information to check the accuracy of our categorization and, thus, it is possible that some animals are incorrectly represented as in our analysis. For instance, domestic bird incidents may be tabulated in our results under wild animal incidents.
-
-@tbl-night-summary @fig-night-animal
 
 ## Conclusion {#conclusion}
 
