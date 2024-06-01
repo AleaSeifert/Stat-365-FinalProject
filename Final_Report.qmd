@@ -135,10 +135,9 @@ pivot_wider(id_cols = Animal_Category, names_from = day_time, values_from = n) |
                   align = c("l", "c", "c"),
                   booktabs = TRUE
                   )
-
 ```
 
-Figure 1 further illustrates these results while also indicating trends over time. Notably, there were several years in which the year-over-year trend was different between the two groups. For example, from 2017 to 2019, the proportion of night-time incidents for wild animals dipped, contrasting the pet proportions that showed continuous increases.
+@fig-night-animal further illustrates these results while also indicating trends over time. Notably, there were several years in which the year-over-year trend was different between the two groups. For example, from 2017 to 2019, the proportion of night-time incidents for wild animals dipped, contrasting the pet proportions that showed continuous increases.
 
 ```{r}
 #| label: fig-night-animal
@@ -146,6 +145,11 @@ Figure 1 further illustrates these results while also indicating trends over tim
 #| fig-alt: "The graph depicts a line chart with the x-axis as year, from 2009 to 2020, and the percent of night-time rescues, from 0 percent to 50 percent. There are two lines on the graph, one depicting percentage of night-time rescues of pets over time in orange and the other is depicting percentage of night-time rescues of wild animals over time in blue. Overall, the pet line appears to be slightly higher than the wild animal line for all years, with some variation."
 #| fig-align: center
 #| fig-pos: "H"
+
+label_data <- data.frame(cal_year = c(2010, 2019), 
+                         Prop_Night = c(0.4, 0.2),
+                         Animal_Category = c("Pets", "Wild Animals")
+)
 
 animals_clean |>
   ggplot(aes(x = cal_year, y = Prop_Night, color = Animal_Category)) +
@@ -168,11 +172,44 @@ animals_clean |>
   scale_color_manual(values = c("orange3", "steelblue")) +
   scale_linetype_manual(values = c("solid", "dashed")) +
   scale_shape_manual(values = c(17, 16))
+  
 ```
 
-Figure 2 indicates greater variability within the wild animal group which may be a product of the lower comparative sample size. Importantly, we note that the margin of error does not overlap between the two groups, providing visual evidence of a significant difference in proportions of night-time incidents. Consequently, after running the two-proportion z-test, we found a discernible difference in the proportion of night-time incidents between pets and wild animals (X2 = 14.991; df = 1; p-value \< 0.0001).
+@fig-cl indicates greater variability within the wild animal group which may be a product of the lower comparative sample size. Importantly, we note that the margin of error does not overlap between the two groups, providing visual evidence of a significant difference in proportions of night-time incidents. Consequently, after running the two-proportion z-test, we found a discernible difference in the proportion of night-time incidents between pets and wild animals (X2 = 14.991; df = 1; p-value \< 0.0001).
 
-INSERT CONFIDENCE INTERVAL PLOT
+```{r}
+#| label: fig-cl
+#| fig-cap: "The figure represents the 95% confidence interval for the propotion of night-time rescues for each pets and wild animals. "
+# Number of nighttime in each sample
+pet <- 1636
+wild <- 570
+
+# Total number of animals in each sample
+n_pet <- 4668
+n_wild <- 1898
+
+# Calculate sample proportions
+p1 <- pet / n_pet
+p2 <- wild / n_wild
+
+# Confidence Intervals
+result1 <- prop.test(pet, n_pet)
+result2 <- prop.test(wild, n_wild)
+
+cl_animal <- data.frame(animal_type = c("Pets", "Wild Animals"),
+                        lower = c(0.3368063, 0.2798561),
+                        upper = c(0.3643841, 0.3215931),
+                        prop = c(p1, p2))
+
+ggplot(cl_animal, aes(x = animal_type)) +
+  geom_point(aes(y = prop), size = 4) +  # Specify y value here
+  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2) +
+  labs(title = "95% Confidence Intervals for Night-time Rescues",
+       subtitle = "Confidence Interval",
+       x = "Animal Type",
+       y = "") +
+  theme_bw()
+```
 
 ## Discussion {#discussion}
 
@@ -190,4 +227,8 @@ Future research might delve deeper into the specifics of these rescue incidents,
 
 It is also important to acknowledge the limitations of our study. Given that our data disregards any animal injuries or death, our results can not be applied to calls where animals are life threatening predicaments. Additionally, our analysis encompasses the entire population of reported rescues by the LFB from 2009 to 2021, thus there is no larger population to which we can generalize our results. Nonetheless, our results provide a foundational understanding of animal rescue patterns in London, offering practical insights that can inform both public safety measures and the operational strategies of the LFB.
 
+{{< pagebreak >}}
+
 ## References {.unnumbered}
+
+
