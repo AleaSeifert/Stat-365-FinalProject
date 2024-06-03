@@ -132,7 +132,7 @@ pivot_wider(id_cols = Animal_Category, names_from = day_time, values_from = n) |
                   col.names = c("Animal Type", 
                                 "% of Rescues Occuring at Night",
                                 "Total Number of Animals"),
-                  align = c("l", "c", "c"),
+                  align = c("l", "r", "r"),
                   booktabs = TRUE
                   )
 ```
@@ -204,11 +204,12 @@ cl_animal <- data.frame(animal_type = c("Pets", "Wild Animals"),
 ggplot(cl_animal, aes(x = animal_type)) +
   geom_point(aes(y = prop), size = 4) +  # Specify y value here
   geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2) +
-  labs(title = "95% Confidence Intervals for Night-time Rescues",
-       subtitle = "Confidence Interval",
+  labs(title = "95% Confidence Intervals for Percentage of Night-time Rescues",
        x = "Animal Type",
        y = "") +
-  theme_bw()
+  theme_bw() +
+  scale_y_continuous(limits = c(0.25, 0.4), labels = scales::percent) +
+  theme(plot.title = element_markdown(size = 12))
 ```
 
 ## Discussion {#discussion}
