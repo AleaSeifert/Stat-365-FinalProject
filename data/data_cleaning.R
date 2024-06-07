@@ -4,10 +4,6 @@ library(here)
 
 animals <- read_csv(here("data","animal_rescues.csv"))
 
-# Converting data to excel
-library(writexl)
-writexl::write_xlsx(animals, "animals.xlsx")
-
 
 # Interested variables
 animals_new <- animals |> 

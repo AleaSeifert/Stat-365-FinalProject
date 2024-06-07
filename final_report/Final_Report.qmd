@@ -44,7 +44,7 @@ library(ggtext)
 #| label: data-cleaning
 # Data Cleaning
 
-source("data_cleaning.R")
+source("data","data_cleaning.R")
 
 animals_clean <- animals |>
   filter(cal_year < 2021) |>
