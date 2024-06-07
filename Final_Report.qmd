@@ -103,7 +103,7 @@ We conducted the z-test in R version 4.4.0 [@r2024]. We used tidyverse package [
 
 ## Results {#results}
 
-The proportion of night-time incidents for pets and wild animals are 35% and 30%, respectively (@tbl-night-summary). We should note that a much larger number of pet incidents occurred, compared to wild animals, when investigating sample sizes.
+The proportion of night-time incidents for pets and wild animals are 35% and 30%, respectively (@tbl-night-summary). We should note that a much larger number of pet incidents occurred overall, as compared to wild animals, when investigating sample sizes.
 
 ```{r}
 #| label: tbl-night-summary
@@ -175,11 +175,11 @@ animals_clean |>
   
 ```
 
-@fig-cl indicates greater variability within the wild animal group which may be a product of the lower comparative sample size. Importantly, we note that the margin of error does not overlap between the two groups, providing visual evidence of a significant difference in proportions of night-time incidents. Consequently, after running the two-proportion z-test, we found a discernible difference in the proportion of night-time incidents between pets and wild animals (X2 = 14.991; df = 1; p-value \< 0.0001).
+@fig-cl portrays 95% confidence intervals from the two-proportion z-test. There appears to be a wider interval for the wild animal group which may be a product of the lower comparative sample size. Importantly, we note that the margin of error does not overlap between the two groups, providing visual evidence of a significant difference in proportions of night-time incidents. Consequently, after running the two-proportion z-test, we found a discernible difference in the proportion of night-time incidents between pets and wild animals ($X^2$ = 14.991; df = 1; p-value \< 0.0001).
 
 ```{r}
 #| label: fig-cl
-#| fig-cap: "The figure represents the 95% confidence interval for the propotion of night-time rescues for each pets and wild animals. "
+#| fig-cap: "The figure represents the 95% confidence interval for the difference in propotions of night-time rescues for each pets and wild animals. "
 #| fig-pos: "H"
 # Number of nighttime in each sample
 pet <- 1636
@@ -215,13 +215,15 @@ ggplot(cl_animal, aes(x = animal_type)) +
 
 ## Discussion {#discussion}
 
-Based on our findings, we can draw a few observations about LFB animal rescues. Namely, we found there is a significant difference between the proportion of pet rescues and wild animal rescues during the night-time hour. This means that pets proportionally get into trouble at night more often than wild animals. To fully understand if this difference has any practical significance we recommend consulting with licensed wildlife rehabbers or other professional animal caretakers. These professionals might better understand how various external factors other than time of day influence animal incidents. For instance, time of year might be a factor to include in future studies as spring months that fall under “baby season” could potentially have more incidents.
+Based on our findings, we can draw a few observations about LFB animal rescues. Namely, we found there is a significant difference between the proportion of pet rescues and wild animal rescues during the night-time hour. This means that pets proportionally get into trouble at night more often than wild animals. A possible contributing factor to this observation is that most people remain inside at night to unwind and sleep. This means that unless a wild animal ventures directly to their homes, most people are unlikely to encounter one in need of rescue. However, should a pet need assistance, their owner would be more likely to notice because they are home. Conversely, during the day-time hours when pet owners are at work, it is less probable they will be in a position to call in about their pet.
 
-It is important to note that we can not generalize our findings to all types of pets. Domesticated animals including horses, goats, and guinea pigs were not included. The subjective categorization of animals into pet and wild groups is also a limitation of our findings. The data do not provide information to check the accuracy of our categorization and, thus, it is possible that some animals are incorrectly represented as in our analysis. For instance, domestic bird incidents may be tabulated in our results under wild animal incidents.
+To fully understand if this difference has any practical significance we recommend consulting with licensed wildlife rehabbers or other professional animal caretakers. These professionals might better understand how various external factors other than time of day influence animal incidents. For instance, time of year might be a factor to include in future studies as spring months that fall under “baby season” could potentially have more incidents.
+
+Given the observational nature of the analysis, we may only draw associative conclusions about animals in London and are unable to claim a causal relationship between time of incidents and animal type. It is also important to note that we can not generalize our findings to all types of animals. Domesticated animals including horses, goats, and guinea pigs were not included. The subjective categorization of animals into pet and wild groups is also a limitation of our findings. The data do not provide information to check the accuracy of our categorization and, thus, it is possible that some animals are incorrectly represented as in our analysis. For instance, domestic bird incidents may be tabulated in our results under wild animal incidents. Overall, the data only include rescues that were documented by the LFB, however, other agencies may have been responsible for additional rescues.
 
 ## Conclusion {#conclusion}
 
-Our analysis of the London Fire Brigade’s data on animal rescues provided valuable insights into the patterns of night-time incidents involving pets and wild animals. Our findings indicate that pets (defined as dogs, cats, and rabbits) have a significantly higher rate of night-time rescues compared to wild animals (foxes, deer, and birds). This suggests a need for increased public awareness regarding pet safety. Ensuring that pets are in secure locations overnight can potentially reduce the frequency of night-time rescues, enhancing both pet safety and the efficiency of rescue operations.
+Our analysis of the London Fire Brigade’s data on animal rescues provided valuable insights into the patterns of night-time incidents involving pets and wild animals. Our findings indicate that pets (defined as dogs, cats, and rabbits) have a discernably higher rate of night-time rescues compared to wild animals (foxes, deer, and birds). This suggests a need for increased public awareness regarding pet safety. Ensuring that pets are in secure locations overnight can potentially reduce the frequency of night-time rescues, enhancing both pet safety and the efficiency of rescue operations.
 
 While our analysis specifically focused on the proportion of night-time rescues, it can be noted that the majority of incidents for both pets and wild animals occurred during the day, with night-time rescues making up less than 36% of the total incidents for both groups. This information is important for the LFB, as it highlights the periods when more resources and personnel are likely needed to effectively respond to animal rescue calls.
 
