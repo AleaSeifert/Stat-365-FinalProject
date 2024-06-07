@@ -38,13 +38,14 @@ bibliography: references.bib
 #| label: setup
 library(tidyverse)
 library(ggtext)
+library(here)
 ```
 
 ```{r}
 #| label: data-cleaning
 # Data Cleaning
 
-source("data","data_cleaning.R")
+source(here("scripts","data_cleaning.R"))
 
 animals_clean <- animals |>
   filter(cal_year < 2021) |>
